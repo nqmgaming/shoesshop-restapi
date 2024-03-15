@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,4 +49,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    val ev_version = "1.0.4"
+    implementation ("com.wajahatkarim:easyvalidation-core:$ev_version")
+
+    // Shows Toasts by default for every validation error
+    implementation ("com.wajahatkarim:easyvalidation-toast:$ev_version")
 }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShoesShop</string>
+    <string name="by_continuing_i_agree_to_nike_s_n_privacy_policy_abd_terms_of_nuse">By continuing, I agree to Nike\'s\n<u>Privacy Policy</u> abd <u>Terms of</u>\n<u>Use</u></string>
+    <string name="edit"><u>Edit</u></string>
+    <string name="forgotten_your_password"><u>Forgotten your password?</u></string>
+    <string name="i_agree_to_nike_s_n_u_privacy_policy_u_and_u_terms_of_u_n_u_use_u">I agree to Nike\'s\n<u><b>Privacy Policy</b></u> and <u><b>Terms of</b></u>\n<u><b>Use</b></u></string>
 </resources>
