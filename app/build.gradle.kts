@@ -66,4 +66,8 @@ dependencies {
 
     // Jwt Decoder
     implementation ("com.auth0.android:jwtdecode:2.0.2")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }

@@ -1,4 +1,4 @@
-package com.nqmgaming.shoesshop
+package com.nqmgaming.shoesshop.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 
 

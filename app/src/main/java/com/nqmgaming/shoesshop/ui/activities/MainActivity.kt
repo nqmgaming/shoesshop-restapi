@@ -1,19 +1,14 @@
-package com.nqmgaming.shoesshop
+package com.nqmgaming.shoesshop.ui.activities
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.google.gson.Gson
-import com.nqmgaming.shoesshop.api.ApiService
+import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.databinding.ActivityMainBinding
-import com.nqmgaming.shoesshop.model.User
-import com.nqmgaming.shoesshop.util.SharedPrefUtils
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

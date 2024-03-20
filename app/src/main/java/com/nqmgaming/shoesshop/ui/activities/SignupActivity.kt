@@ -1,4 +1,4 @@
-package com.nqmgaming.shoesshop
+package com.nqmgaming.shoesshop.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,13 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ActivitySignupBinding
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
-import com.wajahatkarim3.easyvalidation.core.view_ktx.minLength
-import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import retrofit2.Call
 
