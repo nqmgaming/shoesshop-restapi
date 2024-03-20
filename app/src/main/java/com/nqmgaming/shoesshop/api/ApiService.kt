@@ -2,9 +2,9 @@ package com.nqmgaming.shoesshop.api
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.nqmgaming.shoesshop.model.SigninRequest
-import com.nqmgaming.shoesshop.model.SigninResponse
-import com.nqmgaming.shoesshop.model.User
+import com.nqmgaming.shoesshop.model.signin.SigninRequest
+import com.nqmgaming.shoesshop.model.signin.SigninResponse
+import com.nqmgaming.shoesshop.model.signup.SignupRequest
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,6 +32,21 @@ interface ApiService {
      */
     @POST("api/v1/user/signin")
     fun signin(@Body request: SigninRequest): Call<SigninResponse>
+
+    /**
+     * Signup the user by creating a new user
+     * @param email the email of the user
+     * @param password the password of the user
+     * @param image the image of the user
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param birthDate the birth date of the user
+     * @param address the address of the user
+     * @param phoneNumber the phone number of the user
+     * return the jwt token if the user is exist in the database else return null
+     */
+    @POST("api/v1/user/signup")
+    fun signup(@Body request: SignupRequest): Call<SigninResponse>
 
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()

@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ActivityMainBinding
 import com.nqmgaming.shoesshop.model.User
+import com.nqmgaming.shoesshop.util.SharedPrefUtils
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         binding.textView.setOnClickListener {
 
             Toast.makeText(this, "Api", Toast.LENGTH_SHORT).show()
+            val logout = SharedPrefUtils.clear(this)
+
         }
 
     }

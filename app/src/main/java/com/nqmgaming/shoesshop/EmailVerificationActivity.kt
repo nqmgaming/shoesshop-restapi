@@ -32,16 +32,12 @@ class EmailVerificationActivity : AppCompatActivity() {
         binding.continueBtn.setOnClickListener {
             email = binding.emailEt.text.toString().trim()
             email.validEmail() {
-                if (it.isEmpty()) {
-                    binding.emailEt.error = null
-                } else {
-                    binding.emailEt.error = it
-                    return@validEmail
-
-                }
+                binding.emailEt.error = it
+                return@validEmail
             }
-            Toast.makeText(this, "Email is valid", Toast.LENGTH_SHORT).show()
-            checkUserIsExist(email)
+            if (email.validEmail()) {
+                checkUserIsExist(email)
+            }
 
         }
     }

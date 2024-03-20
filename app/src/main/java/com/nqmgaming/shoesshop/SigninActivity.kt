@@ -1,17 +1,18 @@
 package com.nqmgaming.shoesshop
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ActivitySigninBinding
-import com.nqmgaming.shoesshop.model.SigninRequest
-import com.nqmgaming.shoesshop.model.SigninResponse
+import com.nqmgaming.shoesshop.model.signin.SigninRequest
+import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.util.JwtUtils
+import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import retrofit2.Call
 
 class SigninActivity : AppCompatActivity() {
@@ -60,6 +61,11 @@ class SigninActivity : AppCompatActivity() {
                         Log.d("SigninActivity", "onResponse: ${accessToken.accessToken}")
                         val userId = JwtUtils.decode(accessToken.accessToken, "nqmgaming")
                         Log.d("SigninActivity", "onResponse: $userId")
+                        SharedPrefUtils.saveBoolean(this@SigninActivity, "isLogin", true)
+                        if (userId != null) {
+                            SharedPrefUtils.saveString(this@SigninActivity, "userId", userId)
+                        }
+                        intentToMain()
                     }
                 }
             }
@@ -69,5 +75,10 @@ class SigninActivity : AppCompatActivity() {
             }
         })
 
+    }
+    private fun intentToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.nqmgaming.shoesshop.util.SharedPrefUtils
 
 
 class SplashActivity : AppCompatActivity() {
@@ -21,11 +22,24 @@ class SplashActivity : AppCompatActivity() {
             insets
         }
 
-       // intent to auth after 2 seconds
+//        intent to auth after 2 seconds
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            intentToAuth()
+            val isLogin = SharedPrefUtils.getBoolean(this, "isLogin", false)
+            if (isLogin) {
+                intentToMain()
+            } else {
+                intentToAuth()
+            }
         }, 2000)
+
+
+    }
+
+    private fun intentToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun intentToAuth() {
