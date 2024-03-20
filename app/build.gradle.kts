@@ -54,4 +54,14 @@ dependencies {
 
     // Shows Toasts by default for every validation error
     implementation ("com.wajahatkarim:easyvalidation-toast:$ev_version")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.10.0")
+
+    // Jwt Decoder
+    implementation ("com.auth0.android:jwtdecode:2.0.2")
 }
