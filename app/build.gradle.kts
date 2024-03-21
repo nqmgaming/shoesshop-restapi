@@ -70,4 +70,10 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    // SwipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    //popup dialog
+    implementation ("com.saadahmedev.popup-dialog:popup-dialog:1.0.5")
 }

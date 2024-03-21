@@ -1,13 +1,16 @@
 package com.nqmgaming.shoesshop.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Product(
-    val id: Int,
+    @SerializedName("_id")
+    val id: String,
     val name: String,
     val description: String,
     val price: Double,
     val category: Category,
     val image: String,
     val stock: Int,
-    val createAt: String,
-    val updateAt: String
+    val createdAt: String,
+    val updatedAt: String
 )

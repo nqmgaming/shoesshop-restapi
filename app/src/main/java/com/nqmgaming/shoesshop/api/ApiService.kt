@@ -2,6 +2,8 @@ package com.nqmgaming.shoesshop.api
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.nqmgaming.shoesshop.model.Category
+import com.nqmgaming.shoesshop.model.Product
 import com.nqmgaming.shoesshop.model.signin.SigninRequest
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
@@ -14,6 +16,11 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
+
+    /**
+     * Check server status
+     * return true if the server is running else return false
+     */
 
     /**
      * Check if the user is not exist in the database by finding the user by email
@@ -47,6 +54,29 @@ interface ApiService {
      */
     @POST("api/v1/user/signup")
     fun signup(@Body request: SignupRequest): Call<SigninResponse>
+
+    /**
+     * Get category by id
+     * @param id the id of the category
+     * return the category if the category is exist in the database else return null
+     */
+    @GET("api/v1/category/{id}")
+    fun getCategoryById(@Path("id") id: Int): Call<Category>
+
+    /**
+     * Get all products
+     * return the list of products if the products are exist in the database else return null
+     */
+    @GET("api/v1/product/get-all")
+    fun getAllProducts(): Call<ArrayList<Product>>
+
+    /**
+     * Get product by id
+     * @param id the id of the product
+     * return the product if the product is exist in the database else return null
+     */
+    @GET("api/v1/product/get/{id}")
+    fun getProductById(@Path("id") id: String): Call<Product>
 
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()

@@ -1,7 +1,7 @@
 package com.nqmgaming.shoesshop.model
 
 data class Order(
-    val id: Int,
+    val id: String,
     val user: User,
     val items: List<ItemOrder>,
     val createAt: String,
