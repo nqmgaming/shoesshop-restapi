@@ -2,7 +2,10 @@ package com.nqmgaming.shoesshop.api
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.nqmgaming.shoesshop.model.Cart
+import com.nqmgaming.shoesshop.model.CartRequest
 import com.nqmgaming.shoesshop.model.Category
+import com.nqmgaming.shoesshop.model.ItemCart
 import com.nqmgaming.shoesshop.model.Product
 import com.nqmgaming.shoesshop.model.signin.SigninRequest
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
@@ -13,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -77,6 +81,31 @@ interface ApiService {
      */
     @GET("api/v1/product/get/{id}")
     fun getProductById(@Path("id") id: String): Call<Product>
+
+    /**
+     * Create a new cart
+     * @param userId the id of the user
+     * @param productId the id of the product
+     * @param quantity the quantity of the product
+     */
+    @POST("api/v1/cart/create")
+    fun createCart(@Body request: CartRequest): Call<Cart>
+
+    /**
+     * Get all carts by user id
+     * @param userId the id of the user
+     * return the list of carts if the carts are exist in the database else return null
+     */
+    @GET("api/v1/cart/get-by-user/{id}")
+    fun getCartByUserId(@Path("id") id: String): Call<List<Cart>>
+
+    /**
+     * Update quantity of the product in the cart
+     * @param cartId the id of the cart
+     * @param items the list of items in the cart
+     */
+    @PUT("api/v1/cart/update-quantity/{id}")
+    fun updateCartQuantity(@Path("id") id: String, @Body items: List<ItemCart>): Call<Cart>
 
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()

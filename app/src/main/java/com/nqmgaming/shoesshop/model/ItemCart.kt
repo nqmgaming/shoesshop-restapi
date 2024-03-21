@@ -1,7 +1,8 @@
 package com.nqmgaming.shoesshop.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ItemCart(
-    val id: Int,
-    val product: Product,
-    val quantity: Int
+    val product: String,
+    var quantity: Int
 )

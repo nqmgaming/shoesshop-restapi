@@ -1,6 +1,8 @@
 package com.nqmgaming.shoesshop.ui.activities
 
+import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,13 +12,23 @@ import com.bumptech.glide.Glide
 import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ActivityProductDetailBinding
+import com.nqmgaming.shoesshop.model.Cart
+import com.nqmgaming.shoesshop.model.CartRequest
+import com.nqmgaming.shoesshop.model.ItemCart
 import com.nqmgaming.shoesshop.model.Product
+import com.nqmgaming.shoesshop.util.JwtUtils
+import com.nqmgaming.shoesshop.util.SharedPrefUtils
+import com.saadahmedsoft.popupdialog.PopupDialog
+import com.saadahmedsoft.popupdialog.Styles
+import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import retrofit2.Call
+import java.util.Date
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var productId: String
     private lateinit var product: Product
+    private lateinit var userId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
@@ -35,7 +47,41 @@ class ProductDetailActivity : AppCompatActivity() {
 
         productId = intent.getStringExtra("productId").toString()
         getProductDetail(productId)
+        userId = SharedPrefUtils.getString(this@ProductDetailActivity, "userId", "").toString()
+        Log.e("HomeFragment", "onViewCreated: $userId")
+        binding.addToBagBtn.setOnClickListener {
+            addToBag(userId, productId)
+        }
 
+    }
+
+    private fun addToBag(userId: String, productId: String) {
+        val items = listOf(ItemCart(productId, 1))
+        // Replace the JWT token with the actual user id
+        val actualUserId = JwtUtils.decode(userId, "nqmgaming")
+        val request = CartRequest(actualUserId!!, items, Date().toString(), Date().toString())
+        val call: Call<Cart> = ApiService.apiService.createCart(request)
+        call.enqueue(object : retrofit2.Callback<Cart> {
+            override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {
+                if (response.isSuccessful) {
+                    val cart = response.body()!!
+                    Toast.makeText(
+                        this@ProductDetailActivity,
+                        "Add to bag successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("ProductDetailActivity", "onResponse: ${response.body()}")
+                } else {
+                    response.errorBody()?.let {
+                        Log.e("ProductDetailActivity", "onResponseError: ${it.string()}")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Cart>, t: Throwable) {
+                Log.e("ProductDetailActivity", "onFailure: ${t.message}")
+            }
+        })
     }
 
     private fun getProductDetail(productId: String) {
@@ -48,9 +94,10 @@ class ProductDetailActivity : AppCompatActivity() {
                         .into(binding.productImage)
                     binding.toolbar.title = product.name
                     binding.productName.text = product.name
-                    binding.productPrice.text = product.price.toString() + " đ"
+                    binding.productPrice.text = "${product.price} đ"
                     binding.productCategory.text = product.category.name
                     binding.productDescription.text = product.description
+                    binding.productStock.text = "Stock: ${product.stock}"
                 }
             }
 
@@ -64,5 +111,6 @@ class ProductDetailActivity : AppCompatActivity() {
         })
 
     }
+
 
 }

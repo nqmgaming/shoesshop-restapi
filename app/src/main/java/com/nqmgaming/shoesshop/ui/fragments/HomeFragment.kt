@@ -20,6 +20,7 @@ import com.nqmgaming.shoesshop.databinding.FragmentHomeBinding
 import com.nqmgaming.shoesshop.model.Category
 import com.nqmgaming.shoesshop.model.Product
 import com.nqmgaming.shoesshop.ui.activities.ProductDetailActivity
+import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import retrofit2.Call
 
 
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var shoesAdapter: ShoesAdapter
     private lateinit var shoesList: ArrayList<Product>
+    private lateinit var userId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +53,7 @@ class HomeFragment : Fragment() {
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
+
     }
 
     private fun getAllProducts() {
@@ -68,14 +71,12 @@ class HomeFragment : Fragment() {
                     binding.shoesGrid.onItemClickListener =
                         AdapterView.OnItemClickListener { parent, view, position, id ->
                             val product = shoesList[position]
-                            //intent to detail
-                            Toast.makeText(requireContext(), product.id +"", Toast.LENGTH_SHORT).show()
                             val intent = Intent(requireContext(), ProductDetailActivity::class.java)
                             intent.putExtra("productId", product.id)
                             startActivity(intent)
                         }
 
-                }else{
+                } else {
                     Log.e("HomeFragment", "onResponse: ${response.errorBody()}")
                 }
             }
@@ -86,11 +87,13 @@ class HomeFragment : Fragment() {
         })
 
     }
+
     @Deprecated("This method is deprecated")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

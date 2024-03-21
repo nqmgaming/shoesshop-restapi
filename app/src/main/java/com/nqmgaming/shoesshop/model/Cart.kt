@@ -1,9 +1,12 @@
 package com.nqmgaming.shoesshop.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Cart(
-    val id: String,
-    val user: User,
+    val user: String, // Change this to String
     val items: List<ItemCart>,
-    val createAt: String,
-    val updateAt: String
+    val createdAt: String,
+    val updatedAt: String,
+    @SerializedName("_id")
+    val id: String
 )

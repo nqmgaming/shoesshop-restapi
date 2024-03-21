@@ -77,6 +77,15 @@
                     android:text="Product price"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/product_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Product stock"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/product_description"
