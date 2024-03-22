@@ -1,5 +1,6 @@
 package com.nqmgaming.shoesshop.ui.activities
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,9 @@ import com.nqmgaming.shoesshop.model.signin.SigninRequest
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.util.JwtUtils
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
+import com.saadahmedsoft.popupdialog.PopupDialog
+import com.saadahmedsoft.popupdialog.Styles
+import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import retrofit2.Call
 
 class SigninActivity : AppCompatActivity() {
@@ -55,7 +59,10 @@ class SigninActivity : AppCompatActivity() {
         val request = SigninRequest(email, password)
         val call: Call<SigninResponse> = ApiService.apiService.signin(request)
         call.enqueue(object : retrofit2.Callback<SigninResponse> {
-            override fun onResponse(call: Call<SigninResponse>, response: retrofit2.Response<SigninResponse>) {
+            override fun onResponse(
+                call: Call<SigninResponse>,
+                response: retrofit2.Response<SigninResponse>
+            ) {
                 if (response.isSuccessful) {
                     val accessToken = response.body()
                     if (accessToken != null) {
@@ -66,7 +73,19 @@ class SigninActivity : AppCompatActivity() {
                         if (userId != null) {
                             SharedPrefUtils.saveString(this@SigninActivity, "userId", userId)
                         }
-                        intentToMain()
+                        PopupDialog.getInstance(this@SigninActivity)
+                            .setStyle(Styles.SUCCESS)
+                            .setHeading("Sign in success!")
+                            .setDescription("Welcome back to shoesshop")
+                            .setCancelable(false)
+                            .showDialog(object : OnDialogButtonClickListener() {
+                                override fun onDismissClicked(dialog: Dialog) {
+                                    super.onDismissClicked(dialog)
+                                    dialog.dismiss()
+                                    intentToMain()
+                                }
+                            })
+
                     }
                 }
             }
@@ -77,6 +96,7 @@ class SigninActivity : AppCompatActivity() {
         })
 
     }
+
     private fun intentToMain() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

@@ -110,7 +110,7 @@ interface ApiService {
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val apiService: ApiService = Retrofit.Builder()
-            .baseUrl("http://192.168.54.102:3001/")
+            .baseUrl("http://10.24.16.140:3001/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)

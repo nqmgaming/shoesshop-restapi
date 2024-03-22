@@ -1,5 +1,6 @@
 package com.nqmgaming.shoesshop.ui.activities
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,9 @@ import com.nqmgaming.shoesshop.databinding.ActivitySignupBinding
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
+import com.saadahmedsoft.popupdialog.PopupDialog
+import com.saadahmedsoft.popupdialog.Styles
+import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import retrofit2.Call
 
@@ -115,7 +119,19 @@ class SignupActivity : AppCompatActivity() {
                             "userId",
                             accessToken.accessToken
                         )
-                        intentToMain()
+                        PopupDialog.getInstance(this@SignupActivity)
+                            .setStyle(Styles.SUCCESS)
+                            .setHeading("Sign up success!")
+                            .setDescription("Welcome to shoesshop")
+                            .setCancelable(false)
+                            .showDialog(object : OnDialogButtonClickListener() {
+                                override fun onDismissClicked(dialog: Dialog) {
+                                    super.onDismissClicked(dialog)
+                                    dialog.dismiss()
+                                    intentToMain()
+                                }
+                            })
+
                     }
                 }
             }

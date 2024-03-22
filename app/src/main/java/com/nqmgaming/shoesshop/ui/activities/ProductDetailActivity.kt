@@ -65,11 +65,17 @@ class ProductDetailActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {
                 if (response.isSuccessful) {
                     val cart = response.body()!!
-                    Toast.makeText(
-                        this@ProductDetailActivity,
-                        "Add to bag successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    PopupDialog.getInstance(this@ProductDetailActivity)
+                        .setStyle(Styles.SUCCESS)
+                        .setHeading("Add to bag success!")
+                        .setDescription("Continue purchase")
+                        .setCancelable(false)
+                        .showDialog(object : OnDialogButtonClickListener() {
+                            override fun onDismissClicked(dialog: Dialog) {
+                                super.onDismissClicked(dialog)
+                                dialog.dismiss()
+                            }
+                        })
                     Log.e("ProductDetailActivity", "onResponse: ${response.body()}")
                 } else {
                     response.errorBody()?.let {
