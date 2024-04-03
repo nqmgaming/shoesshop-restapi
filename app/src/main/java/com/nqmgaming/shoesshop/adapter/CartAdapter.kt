@@ -17,6 +17,8 @@ interface ProductCallback {
 
 class CartAdapter(
     private val cartList: List<Cart>,
+    private val onDeleted: (Cart) -> Unit,
+    private val onUpdated: (Cart) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     inner class CartViewHolder(private val binding: ItemCartBinding) :
@@ -28,23 +30,33 @@ class CartAdapter(
                 binding.itemCategoryTv.text = product.category.name
                 binding.itemDescriptionTv.text = product.description
 
-                binding.itemCartPriceTv.text = (cart.items[0].quantity * product.price).toString()
-                binding.itemCartQuantityTv.text = cart.items[0].quantity.toString()
+                binding.itemCartPriceTv.text = (cart.items.quantity * product.price).toString()
+                binding.itemCartQuantityTv.text = cart.items.quantity.toString()
+                binding.itemSizeTv.text = "Size: ${cart.items.size}"
                 binding.itemCartMinusIv.setOnClickListener {
-                    if (cart.items[0].quantity > 1) {
-                        cart.items[0].quantity -= 1
-                        binding.itemCartQuantityTv.text = cart.items[0].quantity.toString()
+
+                    if (cart.items.quantity > 1) {
+                        cart.items.quantity -= 1
+                        binding.itemCartQuantityTv.text = cart.items.quantity.toString()
                         binding.itemCartPriceTv.text =
-                            (cart.items[0].quantity * product.price).toString()
+                            (cart.items.quantity * product.price).toString()
+                        onUpdated(cart)
+                    } else {
+                        onDeleted(cart)
+                        //remove item from cart
+                        cartList.toMutableList().remove(cart)
+                        notifyDataSetChanged()
                     }
+
                 }
 
                 binding.itemCartPlusIv.setOnClickListener {
-                    if (cart.items[0].quantity < product.stock) {
-                        cart.items[0].quantity += 1
-                        binding.itemCartQuantityTv.text = cart.items[0].quantity.toString()
+                    if (cart.items.quantity < product.stock) {
+                        cart.items.quantity += 1
+                        binding.itemCartQuantityTv.text = cart.items.quantity.toString()
                         binding.itemCartPriceTv.text =
-                            (cart.items[0].quantity * product.price).toString()
+                            (cart.items.quantity * product.price).toString()
+                        onUpdated(cart)
                     } else {
                         Toast.makeText(
                             binding.root.context,
@@ -65,8 +77,8 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cart = cartList[position]
-        if (cart.items.isNotEmpty()) {
-            getProductDetail(cart.items[0].product, object : ProductCallback {
+        if (cart.items.product.isNotEmpty()) {
+            getProductDetail(cart.items.product, object : ProductCallback {
                 override fun onProductReceived(product: Product) {
                     holder.bind(cart, product)
                 }

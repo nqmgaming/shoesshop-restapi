@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.ui.activities.ProductDetailActivity
 import com.nqmgaming.shoesshop.databinding.ItemShoesBinding
+import com.nqmgaming.shoesshop.databinding.ItemShoesBinding.*
 import com.nqmgaming.shoesshop.model.Product
 import java.util.ArrayList
 
@@ -33,7 +34,7 @@ internal class ShoesAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val product = this.shoesList[position]
 
-        val binding = ItemShoesBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding = inflate(LayoutInflater.from(context), parent, false)
 
         binding.shoeName.text = product.name
         binding.shoePrice.text = product.price.toString() + " đ"

@@ -13,6 +13,7 @@ import com.nqmgaming.shoesshop.adapter.CartAdapter
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.FragmentCartBinding
 import com.nqmgaming.shoesshop.model.Cart
+import com.nqmgaming.shoesshop.model.CartRequest
 import com.nqmgaming.shoesshop.util.JwtUtils
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import retrofit2.Call
@@ -23,6 +24,8 @@ class CartFragment : Fragment() {
     private lateinit var userId: String
     private lateinit var cartList: List<Cart>
     private lateinit var cartAdapter: CartAdapter
+    private lateinit var totalPrice: String
+    private lateinit var totalQuantity: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +40,40 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userId = SharedPrefUtils.getString(requireContext(), "userId").toString()
-        userId = JwtUtils.decode(userId, "nqmgaming").toString()
         getCartByUserId(userId)
+
     }
+
     private fun getCartByUserId(userId: String) {
         val call: Call<List<Cart>> = ApiService.apiService.getCartByUserId(userId)
         call.enqueue(object : retrofit2.Callback<List<Cart>> {
-            override fun onResponse(call: Call<List<Cart>>, response: retrofit2.Response<List<Cart>>) {
+            override fun onResponse(
+                call: Call<List<Cart>>,
+                response: retrofit2.Response<List<Cart>>
+            ) {
                 if (response.isSuccessful) {
                     cartList = response.body()!!
                     Log.e("CartFragment", "onResponse: ${cartList}")
-                    cartAdapter = CartAdapter(cartList)
+                    cartAdapter = CartAdapter(cartList,
+                        onDeleted = {
+                            onDeleteCart(it.id)
+                        },
+                        onUpdated = {
+                            onUpdateCart(it)
+                        }
+                    )
                     binding.cartRv.adapter = cartAdapter
-                    val layoutManger = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                    val layoutManger =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                     binding.cartRv.layoutManager = layoutManger
                     cartAdapter.notifyDataSetChanged()
+                    calculateTotal(cartList)
+
                 } else {
-                    Log.e("ProductDetailActivity", "onResponseError: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "ProductDetailActivity",
+                        "onResponseError: ${response.errorBody()?.string()}"
+                    )
                 }
             }
 
@@ -61,6 +81,58 @@ class CartFragment : Fragment() {
                 Log.e("ProductDetailActivity", "onFailure: ${t.message}")
             }
         })
+    }
+
+    private fun onUpdateCart(it: Cart) {
+        val items = it.items
+        val cartRequest = CartRequest(userId, items, it.createdAt, it.updatedAt)
+        val call: Call<Cart> = ApiService.apiService.updateCart(it.id, cartRequest)
+        call.enqueue(object : retrofit2.Callback<Cart> {
+            override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Cart updated", Toast.LENGTH_SHORT).show()
+                    getCartByUserId(userId)
+                } else {
+                    Log.e("CartFragment", "onResponseError: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Cart>, t: Throwable) {
+                Log.e("CartFragment", "onFailure: ${t.message}")
+            }
+        })
+
+    }
+
+    private fun onDeleteCart(cartId: String) {
+        val call: Call<Cart> = ApiService.apiService.deleteCart(cartId)
+        call.enqueue(object : retrofit2.Callback<Cart> {
+            override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Cart deleted", Toast.LENGTH_SHORT).show()
+                    getCartByUserId(userId)
+                } else {
+                    Log.e("CartFragment", "onResponseError: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Cart>, t: Throwable) {
+                Log.e("CartFragment", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun calculateTotal(cartList: List<Cart>) {
+        var total = 0
+        var quantity = 0
+        for (cart in cartList) {
+            total += cart.items.quantity * cart.items.price.toInt()
+            quantity += cart.items.quantity
+        }
+        totalPrice = total.toString()
+        totalQuantity = quantity.toString()
+        binding.totalPriceTv.text = "Total: $totalPrice VND"
+        binding.totalItemsTv.text = "Total items: $totalQuantity"
     }
 
 }

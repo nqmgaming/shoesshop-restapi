@@ -4,5 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ItemCart(
     val product: String,
-    var quantity: Int
+    var quantity: Int,
+    val size: String,
+    val price: Double
 )

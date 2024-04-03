@@ -14,7 +14,9 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -100,17 +102,25 @@ interface ApiService {
     fun getCartByUserId(@Path("id") id: String): Call<List<Cart>>
 
     /**
-     * Update quantity of the product in the cart
-     * @param cartId the id of the cart
+     * Delete the cart by id
+     * @param id the id of the cart
+     */
+    @DELETE("api/v1/cart/delete/{id}")
+    fun deleteCart(@Path("id") id: String): Call<Cart>
+
+    /**
+     * PATCH the cart by id
+     * @param id the id of the cart
      * @param items the list of items in the cart
      */
-    @PUT("api/v1/cart/update-quantity/{id}")
-    fun updateCartQuantity(@Path("id") id: String, @Body items: List<ItemCart>): Call<Cart>
+
+    @PATCH("api/v1/cart/update-quantity/{id}")
+    fun updateCart(@Path("id") id: String, @Body items: CartRequest): Call<Cart>
 
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val apiService: ApiService = Retrofit.Builder()
-            .baseUrl("http://10.24.16.140:3001/")
+            .baseUrl("http://192.168.54.101:3001/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)

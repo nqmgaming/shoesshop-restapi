@@ -92,6 +92,24 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+        when (menu) {
+            else -> {
+                val item = menu.findItem(R.id.action_search)
+                val searchView = item.actionView as androidx.appcompat.widget.SearchView
+                searchView.queryHint = "Search"
+                searchView.setOnQueryTextListener(object :
+                    androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+
+                        return false
+                    }
+                })
+            }
+        }
     }
 
     override fun onDestroy() {

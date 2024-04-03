@@ -59,10 +59,7 @@ class SigninActivity : AppCompatActivity() {
         val request = SigninRequest(email, password)
         val call: Call<SigninResponse> = ApiService.apiService.signin(request)
         call.enqueue(object : retrofit2.Callback<SigninResponse> {
-            override fun onResponse(
-                call: Call<SigninResponse>,
-                response: retrofit2.Response<SigninResponse>
-            ) {
+            override fun onResponse(call: Call<SigninResponse>, response: retrofit2.Response<SigninResponse>) {
                 if (response.isSuccessful) {
                     val accessToken = response.body()
                     if (accessToken != null) {
@@ -96,7 +93,6 @@ class SigninActivity : AppCompatActivity() {
         })
 
     }
-
     private fun intentToMain() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
