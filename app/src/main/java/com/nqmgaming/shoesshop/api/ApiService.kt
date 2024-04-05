@@ -127,7 +127,7 @@ interface ApiService {
      * return the list of orders if the orders are exist in the database else return null
      */
     @GET("api/v1/order/get-by-user/{userId}")
-    fun getOrdersByUserId(@Path("userId") userId: String): Call<List<Order>>
+    fun getOrdersByUserId(@Path("userId") userId: String): Call<List<OrderRequest>>
 
     /**
      * Create a new order
