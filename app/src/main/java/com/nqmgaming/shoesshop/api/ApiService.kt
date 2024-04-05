@@ -6,7 +6,11 @@ import com.nqmgaming.shoesshop.model.Cart
 import com.nqmgaming.shoesshop.model.CartRequest
 import com.nqmgaming.shoesshop.model.Category
 import com.nqmgaming.shoesshop.model.ItemCart
+import com.nqmgaming.shoesshop.model.Order
+import com.nqmgaming.shoesshop.model.OrderRequest
 import com.nqmgaming.shoesshop.model.Product
+import com.nqmgaming.shoesshop.model.ProductStockResponse
+import com.nqmgaming.shoesshop.model.StockUpdateRequest
 import com.nqmgaming.shoesshop.model.signin.SigninRequest
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
@@ -117,10 +121,51 @@ interface ApiService {
     @PATCH("api/v1/cart/update-quantity/{id}")
     fun updateCart(@Path("id") id: String, @Body items: CartRequest): Call<Cart>
 
+    /**
+     * Get all orders by userId
+     * @param userId the id of the user
+     * return the list of orders if the orders are exist in the database else return null
+     */
+    @GET("api/v1/order/get-by-user/{userId}")
+    fun getOrdersByUserId(@Path("userId") userId: String): Call<List<Order>>
+
+    /**
+     * Create a new order
+     * @param userId the id of the user
+     * @param products the list of products in the order
+     * @param total the total price of the order
+     * @param address the address of the user
+     * @param phoneNumber the phone number of the user
+     * @param email the email of the user
+     * @param time the time of the order
+     */
+    @POST("api/v1/order")
+    fun postOrder(@Body request: OrderRequest): Call<Order>
+
+    /**
+     * Update stock of the product
+     * @param id the id of the product
+     * @param quantity the quantity of the product
+     * return the product if the product is exist in the database else return null
+     */
+    @PATCH("api/v1/product/update-quantity/{id}")
+    fun updateProductQuantity(
+        @Path("id") id: String,
+        @Body request: StockUpdateRequest
+    ): Call<Product>
+
+    /**
+     * Get product stock by id
+     * @param id the id of the product
+     * return the stock of the product if the product is exist in the database else return null
+     */
+    @GET("api/v1/product/get-stock/{id}")
+    fun getProductStock(@Path("id") id: String): Call<ProductStockResponse>
+
     companion object {
         private val gson: Gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val apiService: ApiService = Retrofit.Builder()
-            .baseUrl("http://192.168.54.101:3001/")
+            .baseUrl("http://192.168.54.100:3001/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)

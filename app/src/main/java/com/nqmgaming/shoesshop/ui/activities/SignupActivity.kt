@@ -1,5 +1,6 @@
 package com.nqmgaming.shoesshop.ui.activities
 
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -13,12 +14,14 @@ import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ActivitySignupBinding
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
+import com.nqmgaming.shoesshop.util.JwtUtils
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import com.saadahmedsoft.popupdialog.PopupDialog
 import com.saadahmedsoft.popupdialog.Styles
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import retrofit2.Call
+import java.util.Calendar
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
@@ -41,6 +44,31 @@ class SignupActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.dateTil.setOnClickListener {
+            // Get the current date
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            // Create a new instance of DatePickerDialog
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    // This gets called when the user sets the date
+                    // Update the date EditText with the selected date
+                    val selectedDate = "${selectedDay}/${selectedMonth + 1}/$selectedYear"
+                    binding.dateEt.setText(selectedDate)
+                },
+                year,
+                month,
+                day
+            )
+
+            // Show the dialog
+            datePickerDialog.show()
+        }
+
         binding.createAccountBtn.setOnClickListener {
             var error = false
             val email: String = binding.emailTv.text.toString().trim()
@@ -48,6 +76,8 @@ class SignupActivity : AppCompatActivity() {
             val lastName: String = binding.lastnameEt.text.toString().trim()
             val password: String = binding.passwordEt.text.toString().trim()
             val birthdate: String = binding.dateEt.text.toString().trim()
+            val address: String = binding.addressEt.text.toString().trim()
+            val phone: String = binding.phoneEt.text.toString().trim()
 
             firstName.validator()
                 .nonEmpty()
@@ -92,11 +122,40 @@ class SignupActivity : AppCompatActivity() {
                     binding.dateEt.error = null
                 }.check()
 
+            address.validator()
+                .nonEmpty()
+                .minLength(10)
+                .addErrorCallback {
+                    binding.addressEt.error = it
+                    error = true
+                }.addSuccessCallback {
+                    binding.addressEt.error = null
+                }.check()
+
+            phone.validator()
+                .nonEmpty()
+                .minLength(10)
+                .addErrorCallback {
+                    binding.phoneEt.error = it
+                    error = true
+                }.addSuccessCallback {
+                    binding.phoneEt.error = null
+                }.check()
+
             if (error) {
                 return@setOnClickListener
             } else {
                 val request =
-                    SignupRequest(email, password, "", firstName, lastName, birthdate, "", "")
+                    SignupRequest(
+                        email,
+                        password,
+                        "",
+                        firstName,
+                        lastName,
+                        birthdate,
+                        address,
+                        phone
+                    )
                 signup(request)
             }
         }
@@ -113,11 +172,27 @@ class SignupActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val accessToken = response.body()
                     if (accessToken != null) {
+                        val userId = JwtUtils.decode(accessToken.accessToken, "nqmgaming")
                         SharedPrefUtils.saveBoolean(this@SignupActivity, "isLogin", true)
                         SharedPrefUtils.saveString(
                             this@SignupActivity,
                             "userId",
-                            accessToken.accessToken
+                            userId.toString()
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "email",
+                            accessToken.user.email
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "phoneNumber",
+                            accessToken.user.phoneNumber
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "address",
+                            accessToken.user.address
                         )
                         PopupDialog.getInstance(this@SignupActivity)
                             .setStyle(Styles.SUCCESS)

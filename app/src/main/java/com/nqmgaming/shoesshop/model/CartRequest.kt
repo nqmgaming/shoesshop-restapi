@@ -6,3 +6,4 @@ data class CartRequest(
     val createdAt: String,
     val updatedAt: String
 )
+data class StockUpdateRequest(val stock: Int)

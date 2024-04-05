@@ -1,5 +1,6 @@
 package com.nqmgaming.shoesshop.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.FragmentCartBinding
 import com.nqmgaming.shoesshop.model.Cart
 import com.nqmgaming.shoesshop.model.CartRequest
+import com.nqmgaming.shoesshop.ui.activities.CheckoutActivity
 import com.nqmgaming.shoesshop.util.JwtUtils
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import retrofit2.Call
@@ -41,6 +43,14 @@ class CartFragment : Fragment() {
 
         userId = SharedPrefUtils.getString(requireContext(), "userId").toString()
         getCartByUserId(userId)
+
+        binding.checkOutBtn.setOnClickListener{
+            Intent(requireContext(), CheckoutActivity::class.java).apply {
+                putExtra("totalPrice", totalPrice)
+                putExtra("totalQuantity", totalQuantity)
+                startActivity(this)
+
+        }}
 
     }
 
@@ -85,7 +95,7 @@ class CartFragment : Fragment() {
 
     private fun onUpdateCart(it: Cart) {
         val items = it.items
-        val cartRequest = CartRequest(userId, items, it.createdAt, it.updatedAt)
+        val cartRequest = CartRequest(userId, items,it.createdAt, it.updatedAt)
         val call: Call<Cart> = ApiService.apiService.updateCart(it.id, cartRequest)
         call.enqueue(object : retrofit2.Callback<Cart> {
             override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {

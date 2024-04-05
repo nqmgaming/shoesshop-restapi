@@ -69,6 +69,10 @@ class SigninActivity : AppCompatActivity() {
                         SharedPrefUtils.saveBoolean(this@SigninActivity, "isLogin", true)
                         if (userId != null) {
                             SharedPrefUtils.saveString(this@SigninActivity, "userId", userId)
+                            SharedPrefUtils.saveString(this@SigninActivity, "email", accessToken.user.email)
+                            SharedPrefUtils.saveString(this@SigninActivity, "phoneNumber", accessToken.user.phoneNumber)
+                            SharedPrefUtils.saveString(this@SigninActivity, "address", accessToken.user.address)
+
                         }
                         PopupDialog.getInstance(this@SigninActivity)
                             .setStyle(Styles.SUCCESS)

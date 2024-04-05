@@ -1,5 +1,6 @@
 package com.nqmgaming.shoesshop.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -9,6 +10,7 @@ import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.ItemCartBinding
 import com.nqmgaming.shoesshop.model.Cart
 import com.nqmgaming.shoesshop.model.Product
+import com.nqmgaming.shoesshop.ui.activities.ProductDetailActivity
 import retrofit2.Call
 
 interface ProductCallback {
@@ -66,6 +68,13 @@ class CartAdapter(
                     }
                 }
 
+                binding.root.setOnClickListener {
+                    Intent(binding.root.context, ProductDetailActivity::class.java).apply {
+                        putExtra("productId", product.id)
+                        binding.root.context.startActivity(this)
+                    }
+                }
+
             }
         }
     }
@@ -84,7 +93,7 @@ class CartAdapter(
                 }
             })
         } else {
-            // Handle the case when the items list is empty
+            // Handle the case when the product is empty
         }
     }
 

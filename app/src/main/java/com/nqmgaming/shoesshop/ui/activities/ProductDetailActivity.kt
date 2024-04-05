@@ -57,7 +57,21 @@ class ProductDetailActivity : AppCompatActivity() {
         userId = SharedPrefUtils.getString(this@ProductDetailActivity, "userId", "").toString()
         Log.e("HomeFragment", "onViewCreated: $userId")
         binding.addToBagBtn.setOnClickListener {
-            addToBag(userId, productId)
+            if (product.stock > 0) {
+                addToBag(userId, productId)
+            } else {
+               PopupDialog.getInstance(this@ProductDetailActivity)
+                    .setStyle(Styles.FAILED)
+                    .setHeading("Add to bag failed!")
+                    .setDescription("Product is out of stock")
+                    .setCancelable(false)
+                    .showDialog(object : OnDialogButtonClickListener() {
+                        override fun onDismissClicked(dialog: Dialog) {
+                            super.onDismissClicked(dialog)
+                            dialog.dismiss()
+                        }
+                    })
+            }
         }
 
         binding.selectSizeBtn.setOnClickListener {

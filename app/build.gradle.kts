@@ -76,4 +76,5 @@ dependencies {
 
     //popup dialog
     implementation ("com.saadahmedev.popup-dialog:popup-dialog:1.0.5")
+
 }

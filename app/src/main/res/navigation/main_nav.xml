@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_cartFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_productDetailActivity"
+            app:destination="@id/productDetailActivity" />
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
@@ -65,4 +68,10 @@
             android:id="@+id/action_profileFragment_to_cartFragment"
             app:destination="@id/cartFragment" />
     </fragment>
+    <activity
+        android:id="@+id/productDetailActivity"
+        android:name="com.nqmgaming.shoesshop.ui.activities.ProductDetailActivity"
+        android:label="activity_product_detail"
+        tools:layout="@layout/activity_product_detail" >
+    </activity>
 </navigation>
