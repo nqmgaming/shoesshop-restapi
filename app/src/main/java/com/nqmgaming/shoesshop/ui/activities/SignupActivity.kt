@@ -194,6 +194,26 @@ class SignupActivity : AppCompatActivity() {
                             "address",
                             accessToken.user.address
                         )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "firstName",
+                            accessToken.user.firstName
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "lastName",
+                            accessToken.user.lastName
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "avatar",
+                            accessToken.user.image
+                        )
+                        SharedPrefUtils.saveString(
+                            this@SignupActivity,
+                            "birthdate",
+                            accessToken.user.birthDate
+                        )
                         PopupDialog.getInstance(this@SignupActivity)
                             .setStyle(Styles.SUCCESS)
                             .setHeading("Sign up success!")

@@ -14,16 +14,20 @@ import com.nqmgaming.shoesshop.model.StockUpdateRequest
 import com.nqmgaming.shoesshop.model.signin.SigninRequest
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
 import com.nqmgaming.shoesshop.model.signup.SignupRequest
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -66,6 +70,15 @@ interface ApiService {
     fun signup(@Body request: SignupRequest): Call<SigninResponse>
 
     /**
+     * Patch the user by id
+     * @param id the id of the user
+     *
+     */
+    @Multipart
+    @PATCH("api/v1/user/update/{id}")
+    fun updateAvatar(@Path("id") id: String, @Part avatar: MultipartBody.Part): Call<SigninResponse>
+
+    /**
      * Get category by id
      * @param id the id of the category
      * return the category if the category is exist in the database else return null
@@ -78,7 +91,15 @@ interface ApiService {
      * return the list of products if the products are exist in the database else return null
      */
     @GET("api/v1/product/get-all")
-    fun getAllProducts(): Call<ArrayList<Product>>
+    fun getAllProducts(@Query("sortOrder") sort: String): Call<ArrayList<Product>>
+
+    /**
+     * Search products by name
+     * @param name the name of the product
+     * return the list of products if the products are exist in the database else return null
+     */
+    @GET("api/v1/product/search")
+    fun searchProducts(@Query("name") name: String): Call<ArrayList<Product>>
 
     /**
      * Get product by id

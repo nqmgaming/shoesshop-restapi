@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var shoesAdapter: ShoesAdapter
     private lateinit var shoesList: ArrayList<Product>
     private lateinit var userId: String
+    private var sort: String = "asc"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +59,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getAllProducts() {
-        val call: Call<ArrayList<Product>> = ApiService.apiService.getAllProducts()
+        val call: Call<ArrayList<Product>> = ApiService.apiService.getAllProducts(sort)
         call.enqueue(object : retrofit2.Callback<ArrayList<Product>> {
             override fun onResponse(
                 call: Call<ArrayList<Product>>,
@@ -88,6 +90,37 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun searchByName(name:String) {
+        val call: Call<ArrayList<Product>> = ApiService.apiService.searchProducts(name)
+        call.enqueue(object : retrofit2.Callback<ArrayList<Product>> {
+            override fun onResponse(
+                call: Call<ArrayList<Product>>,
+                response: retrofit2.Response<ArrayList<Product>>
+            ) {
+                if (response.isSuccessful) {
+                    shoesList = response.body()!!
+                    Log.e("HomeFragment", "onResponse: ${shoesList}")
+                    shoesAdapter = ShoesAdapter(shoesList, requireContext())
+                    binding.shoesGrid.adapter = shoesAdapter
+                    binding.shoesGrid.onItemClickListener =
+                        AdapterView.OnItemClickListener { parent, view, position, id ->
+                            val product = shoesList[position]
+                            val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+                            intent.putExtra("productId", product.id)
+                            startActivity(intent)
+                        }
+
+                } else {
+                    Log.e("HomeFragment", "onResponse: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Product>>, t: Throwable) {
+                Log.e("HomeFragment", "onFailure: ${t.message}")
+            }
+        })
+    }
+
     @Deprecated("This method is deprecated")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)
@@ -100,17 +133,42 @@ class HomeFragment : Fragment() {
                 searchView.setOnQueryTextListener(object :
                     androidx.appcompat.widget.SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
+                        searchByName(query!!)
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-
+                        searchByName(newText!!)
                         return false
                     }
                 })
             }
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_search -> {
+                // Handle search action
+                true
+            }
+
+            R.id.sort_increasing -> {
+                sort = "asc"
+                getAllProducts()
+                true
+            }
+
+            R.id.sort_decreasing -> {
+                sort = "desc"
+                getAllProducts()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

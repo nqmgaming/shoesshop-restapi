@@ -59,7 +59,10 @@ class SigninActivity : AppCompatActivity() {
         val request = SigninRequest(email, password)
         val call: Call<SigninResponse> = ApiService.apiService.signin(request)
         call.enqueue(object : retrofit2.Callback<SigninResponse> {
-            override fun onResponse(call: Call<SigninResponse>, response: retrofit2.Response<SigninResponse>) {
+            override fun onResponse(
+                call: Call<SigninResponse>,
+                response: retrofit2.Response<SigninResponse>
+            ) {
                 if (response.isSuccessful) {
                     val accessToken = response.body()
                     if (accessToken != null) {
@@ -69,10 +72,41 @@ class SigninActivity : AppCompatActivity() {
                         SharedPrefUtils.saveBoolean(this@SigninActivity, "isLogin", true)
                         if (userId != null) {
                             SharedPrefUtils.saveString(this@SigninActivity, "userId", userId)
-                            SharedPrefUtils.saveString(this@SigninActivity, "email", accessToken.user.email)
-                            SharedPrefUtils.saveString(this@SigninActivity, "phoneNumber", accessToken.user.phoneNumber)
-                            SharedPrefUtils.saveString(this@SigninActivity, "address", accessToken.user.address)
-
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "email",
+                                accessToken.user.email
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "phoneNumber",
+                                accessToken.user.phoneNumber
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "address",
+                                accessToken.user.address
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "firstName",
+                                accessToken.user.firstName
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "lastName",
+                                accessToken.user.lastName
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "birthdate",
+                                accessToken.user.birthDate
+                            )
+                            SharedPrefUtils.saveString(
+                                this@SigninActivity,
+                                "avatar",
+                                accessToken.user.image
+                            )
                         }
                         PopupDialog.getInstance(this@SigninActivity)
                             .setStyle(Styles.SUCCESS)
@@ -97,6 +131,7 @@ class SigninActivity : AppCompatActivity() {
         })
 
     }
+
     private fun intentToMain() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

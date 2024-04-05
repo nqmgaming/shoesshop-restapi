@@ -63,6 +63,7 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.10.0")
     implementation("com.squareup.retrofit2:converter-gson:2.10.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
     // Jwt Decoder
     implementation ("com.auth0.android:jwtdecode:2.0.2")
@@ -76,5 +77,14 @@ dependencies {
 
     //popup dialog
     implementation ("com.saadahmedev.popup-dialog:popup-dialog:1.0.5")
+
+    // Avatar Image View
+    implementation("xyz.schwaab:avvylib:1.2.0")
+
+    // Ted Permission
+    implementation("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
+
+    // Image Picker
+    implementation ("com.github.dhaval2404:imagepicker:2.1")
 
 }
