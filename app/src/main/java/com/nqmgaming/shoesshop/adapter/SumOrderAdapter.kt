@@ -23,7 +23,7 @@ class SumOrderAdapter(
             val date = originalFormat.parse(order.time)
             val formattedDate = if (date != null) targetFormat.format(date) else ""
             binding.tvDay.text = formattedDate
-            val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(order.total!!.toInt())
+            val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(order.total.toInt())
             binding.tvTotalPrice.text = formattedPrice
             binding.itemOrderRecyclerView.setHasFixedSize(true)
             binding.itemOrderRecyclerView.adapter = ItemOrderAdapter(order.products)
