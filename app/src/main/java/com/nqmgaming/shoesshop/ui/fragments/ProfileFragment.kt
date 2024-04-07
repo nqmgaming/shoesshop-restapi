@@ -1,6 +1,7 @@
 package com.nqmgaming.shoesshop.ui.fragments
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,9 +20,13 @@ import com.nqmgaming.shoesshop.R
 import com.nqmgaming.shoesshop.api.ApiService
 import com.nqmgaming.shoesshop.databinding.FragmentProfileBinding
 import com.nqmgaming.shoesshop.model.signin.SigninResponse
+import com.nqmgaming.shoesshop.ui.activities.AuthActivity
 import com.nqmgaming.shoesshop.ui.activities.SettingActivity
 import com.nqmgaming.shoesshop.util.RealPathUtil
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
+import com.saadahmedsoft.popupdialog.PopupDialog
+import com.saadahmedsoft.popupdialog.Styles
+import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.awaitAll
@@ -51,22 +56,49 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.settingsContainer.setOnClickListener {
-            val intent = Intent(requireContext(), SettingActivity::class.java)
-            startActivity(intent)
-        }
+
 
         userId = SharedPrefUtils.getString(requireContext(), "userId").toString()
         val firstName = SharedPrefUtils.getString(requireContext(), "firstName")
         val lastName = SharedPrefUtils.getString(requireContext(), "lastName")
         val avatar = SharedPrefUtils.getString(requireContext(), "avatar")
         binding.profileNameTv.text = "$firstName $lastName"
-        Glide.with(this).load(avatar).into(binding.profileImageIv)
+        if (avatar != null) {
+            Glide.with(this).load(avatar).placeholder(R.drawable.ic_user_profile).into(binding.profileImageIv)
+        }
 
         binding.profileImageIv.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 checkPermissionAndOpenCameraOrGallery()
             }
+        }
+
+        binding.logoutBtn.setOnClickListener {
+            PopupDialog.getInstance(requireContext())
+                .setStyle(Styles.STANDARD)
+                .setHeading("Logout")
+                .setDescription("Are you sure you want to logout?")
+                .setPositiveButtonText("Yes")
+                .setPositiveButtonBackground(R.color.black)
+                .setNegativeButtonBackground(R.color.white)
+                .setNegativeButtonText("No")
+                .setCancelable(true)
+                .showDialog(object : OnDialogButtonClickListener() {
+                    override fun onNegativeClicked(dialog: Dialog?) {
+                        super.onNegativeClicked(dialog)
+                        dialog?.dismiss()
+                    }
+
+                    override fun onPositiveClicked(dialog: Dialog?) {
+                        super.onPositiveClicked(dialog)
+                        dialog?.dismiss()
+                        SharedPrefUtils.clear(requireContext())
+                        Intent(requireContext(), AuthActivity::class.java).apply {
+                            startActivity(this)
+                            requireActivity().finish()
+                        }
+                    }
+                })
         }
 
     }

@@ -49,10 +49,14 @@ class OrderFragment : Fragment() {
                     response: retrofit2.Response<List<OrderRequest>>
                 ) {
                     if (response.isSuccessful) {
-                        listOrder = response.body()!!
-                        binding.orderRecyclerView.setHasFixedSize(true)
-                        binding.orderRecyclerView.adapter = SumOrderAdapter(listOrder)
-                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                       if (response.body()!!.isNotEmpty()){
+                           listOrder = response.body()!!
+                           binding.orderRecyclerView.setHasFixedSize(true)
+                           binding.orderRecyclerView.adapter = SumOrderAdapter(listOrder)
+                       }else{
+                           binding.emptyOrderLayout.visibility = View.VISIBLE
+                           binding.orderRecyclerView.visibility = View.GONE
+                       }
                     }
                 }
 

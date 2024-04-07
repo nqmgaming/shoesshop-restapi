@@ -62,22 +62,29 @@ class CartFragment : Fragment() {
                 response: retrofit2.Response<List<Cart>>
             ) {
                 if (response.isSuccessful) {
-                    cartList = response.body()!!
-                    Log.e("CartFragment", "onResponse: ${cartList}")
-                    cartAdapter = CartAdapter(cartList,
-                        onDeleted = {
-                            onDeleteCart(it.id)
-                        },
-                        onUpdated = {
-                            onUpdateCart(it)
-                        }
-                    )
-                    binding.cartRv.adapter = cartAdapter
-                    val layoutManger =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    binding.cartRv.layoutManager = layoutManger
-                    cartAdapter.notifyDataSetChanged()
-                    calculateTotal(cartList)
+                    if (response.body()!!.isEmpty()){
+                        binding.emptyCartLayout.visibility = View.VISIBLE
+                        binding.cartRv.visibility = View.GONE
+                        binding.checkOutBtn.visibility = View.GONE
+                        binding.totalItemsTv.visibility = View.GONE
+                    }else{
+                        cartList = response.body()!!
+                        Log.e("CartFragment", "onResponse: ${cartList}")
+                        cartAdapter = CartAdapter(cartList,
+                            onDeleted = {
+                                onDeleteCart(it.id)
+                            },
+                            onUpdated = {
+                                onUpdateCart(it)
+                            }
+                        )
+                        binding.cartRv.adapter = cartAdapter
+                        val layoutManger =
+                            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                        binding.cartRv.layoutManager = layoutManger
+                        cartAdapter.notifyDataSetChanged()
+                        calculateTotal(cartList)
+                    }
 
                 } else {
                     Log.e(
@@ -100,7 +107,6 @@ class CartFragment : Fragment() {
         call.enqueue(object : retrofit2.Callback<Cart> {
             override fun onResponse(call: Call<Cart>, response: retrofit2.Response<Cart>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Cart updated", Toast.LENGTH_SHORT).show()
                     getCartByUserId(userId)
                 } else {
                     Log.e("CartFragment", "onResponseError: ${response.errorBody()?.string()}")
