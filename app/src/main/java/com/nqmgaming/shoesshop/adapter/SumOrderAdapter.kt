@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nqmgaming.shoesshop.databinding.ItemSumOrderBinding
 import com.nqmgaming.shoesshop.model.OrderRequest
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,7 +23,8 @@ class SumOrderAdapter(
             val date = originalFormat.parse(order.time)
             val formattedDate = if (date != null) targetFormat.format(date) else ""
             binding.tvDay.text = formattedDate
-            binding.tvTotalPrice.text = order.total.toString()
+            val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(order.total!!.toInt())
+            binding.tvTotalPrice.text = formattedPrice
             binding.itemOrderRecyclerView.setHasFixedSize(true)
             binding.itemOrderRecyclerView.adapter = ItemOrderAdapter(order.products)
         }

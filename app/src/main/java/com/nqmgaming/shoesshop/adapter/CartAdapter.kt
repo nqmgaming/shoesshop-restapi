@@ -32,7 +32,8 @@ class CartAdapter(
                 binding.itemCategoryTv.text = product.category.name
                 binding.itemDescriptionTv.text = product.description
 
-                binding.itemCartPriceTv.text = (cart.items.quantity * product.price).toString()
+                val priceInMillions = (cart.items.quantity * product.price) / 1_000_000.0
+                binding.itemCartPriceTv.text = String.format("%.2fM", priceInMillions)
                 binding.itemCartQuantityTv.text = cart.items.quantity.toString()
                 binding.itemSizeTv.text = "Size: ${cart.items.size}"
                 binding.itemCartMinusIv.setOnClickListener {
@@ -40,8 +41,8 @@ class CartAdapter(
                     if (cart.items.quantity > 1) {
                         cart.items.quantity -= 1
                         binding.itemCartQuantityTv.text = cart.items.quantity.toString()
-                        binding.itemCartPriceTv.text =
-                            (cart.items.quantity * product.price).toString()
+                        val priceInMillions = (cart.items.quantity * product.price) / 1_000_000.0
+                        binding.itemCartPriceTv.text = String.format("%.2fM", priceInMillions)
                         onUpdated(cart)
                     } else {
                         onDeleted(cart)
@@ -56,8 +57,8 @@ class CartAdapter(
                     if (cart.items.quantity < product.stock) {
                         cart.items.quantity += 1
                         binding.itemCartQuantityTv.text = cart.items.quantity.toString()
-                        binding.itemCartPriceTv.text =
-                            (cart.items.quantity * product.price).toString()
+                        val priceInMillions = (cart.items.quantity * product.price) / 1_000_000.0
+                        binding.itemCartPriceTv.text = String.format("%.2fM", priceInMillions)
                         onUpdated(cart)
                     } else {
                         Toast.makeText(

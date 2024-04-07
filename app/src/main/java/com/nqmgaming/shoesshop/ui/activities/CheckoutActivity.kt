@@ -13,6 +13,8 @@ import com.nqmgaming.shoesshop.databinding.ActivityCheckoutBinding
 import com.nqmgaming.shoesshop.databinding.DialogChangeInfoBinding
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
+import java.text.NumberFormat
+import java.util.Locale
 
 class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
@@ -43,8 +45,8 @@ class CheckoutActivity : AppCompatActivity() {
         binding.emailTv.text = email
         binding.addressTv.text = address
         binding.phoneTv.text = phoneNumber
-
-        binding.tvTotalValue.text = totalPrice + " VND"
+        val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(totalPrice!!.toInt())
+        binding.tvTotalValue.text = "Total: $formattedPrice VND"
         binding.tvShippingFeeValue.text = "Free"
         binding.tvTotalQuantityValue.text = totalQuantity
 

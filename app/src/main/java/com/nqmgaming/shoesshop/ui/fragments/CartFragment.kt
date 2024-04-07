@@ -19,6 +19,8 @@ import com.nqmgaming.shoesshop.ui.activities.CheckoutActivity
 import com.nqmgaming.shoesshop.util.JwtUtils
 import com.nqmgaming.shoesshop.util.SharedPrefUtils
 import retrofit2.Call
+import java.text.NumberFormat
+import java.util.Locale
 
 class CartFragment : Fragment() {
     private var _binding: FragmentCartBinding? = null
@@ -147,7 +149,8 @@ class CartFragment : Fragment() {
         }
         totalPrice = total.toString()
         totalQuantity = quantity.toString()
-        binding.totalPriceTv.text = "Total: $totalPrice VND"
+        val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(totalPrice.toInt())
+        binding.totalPriceTv.text = "Total: $formattedPrice VND"
         binding.totalItemsTv.text = "Total items: $totalQuantity"
     }
 

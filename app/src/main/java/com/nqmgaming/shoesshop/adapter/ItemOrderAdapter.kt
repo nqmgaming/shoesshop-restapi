@@ -12,6 +12,8 @@ import com.nqmgaming.shoesshop.model.Product
 import com.nqmgaming.shoesshop.model.ProductOrderRequest
 import retrofit2.Call
 import retrofit2.Callback
+import java.text.NumberFormat
+import java.util.Locale
 
 class ItemOrderAdapter(
     private val listOrder: List<ProductOrderRequest>
@@ -28,7 +30,8 @@ class ItemOrderAdapter(
                 .into(binding.ivItemOrder)
             binding.tvNameItemOrder.text = product.name
             binding.tvCategoryItemOrder.text = product.category.name
-            binding.tvPriceItemOrder.text = "Price: ${product.price}"
+            val formattedPrice = NumberFormat.getNumberInstance(Locale.US).format(product.price.toInt())
+            binding.tvPriceItemOrder.text = "Price: ${formattedPrice}"
         }
     }
 
